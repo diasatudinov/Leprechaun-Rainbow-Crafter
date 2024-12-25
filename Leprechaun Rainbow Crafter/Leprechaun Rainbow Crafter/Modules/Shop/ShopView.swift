@@ -1,3 +1,11 @@
+//
+//  ShopView.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 25.12.2024.
+//
+
+
 import SwiftUI
 
 struct ShopView: View {
@@ -13,7 +21,7 @@ struct ShopView: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         ZStack {
-                            Image(.backBtn)
+                            Image(.menuBtn)
                                 .resizable()
                                 .scaledToFit()
                         }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
@@ -25,7 +33,7 @@ struct ShopView: View {
                         Spacer()
                         
                         ZStack {
-                            Image(.coinsBg)
+                            Image(.coinBg)
                                 .resizable()
                                 .scaledToFit()
                             
@@ -42,7 +50,7 @@ struct ShopView: View {
                 HStack {
                     
                     ForEach(viewModel.bonuses, id: \.self) { bonus in
-                        itemView(image: bonus.icon, header: bonus.name, isPurchased: bonus.purchased, bonus: bonus)
+                        itemView(image: bonus.icon, price: bonus.price, bonusCount: bonus.bonus, bonus: bonus)
                     }
                     
                     
@@ -51,7 +59,7 @@ struct ShopView: View {
             }
             
         }.background(
-            Image(.bg)
+            Image(.appBg)
                 .resizable()
                 .edgesIgnoringSafeArea(.all)
                 .scaledToFill()
@@ -59,7 +67,7 @@ struct ShopView: View {
         )
     }
     
-    @ViewBuilder func itemView(image: String, header: String, isPurchased: Bool, bonus: Bonus) -> some View {
+    @ViewBuilder func itemView(image: String, price: Int, bonusCount: Int, bonus: Bonus) -> some View {
         
         
         ZStack {
@@ -68,32 +76,43 @@ struct ShopView: View {
                 .resizable()
                 .scaledToFit()
             
-            VStack(alignment: .center, spacing: 15) {
+            VStack(alignment: .center, spacing: 3) {
                 
                 Image(image)
                     .resizable()
                     .foregroundColor(.black)
                     .scaledToFit()
-                    .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
+                    .frame(height: DeviceInfo.shared.deviceType == .pad ? 250 : 140)
                     
-                
-                Text(header)
-                    .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .bold))
-                    .foregroundColor(.white)
-                    .textCase(.uppercase)
+                HStack {
+                    
+                    ZStack {
+                        Image(.bonusBg)
+                            .resizable()
+                            .scaledToFit()
+                        TextWithBorder(text: "\(price)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 32:16), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                            .textCase(.uppercase)
+                            .padding(.leading, 25)
+                    }.frame(height: DeviceInfo.shared.deviceType == .pad ? 70:40)
+                    
+                    ZStack {
+                        Image(.coinBg)
+                            .resizable()
+                            .scaledToFit()
+                        TextWithBorder(text: "\(price)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 32:16), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                            .textCase(.uppercase)
+                            .padding(.leading, 25)
+                    }.frame(height: DeviceInfo.shared.deviceType == .pad ? 70:40)
+                    
+                }
                 Button {
-                    if !isPurchased {
-                        if user.coins > 50 {
-                            viewModel.purchaseBonus(bonus: bonus)
-                            user.minusUserCoins(for: 50)
-                        }
+                    
+                    if user.coins > 50 {
+                        user.minusUserCoins(for: 50)
                     }
+                    
                 } label: {
-                    Image(isPurchased ? .shopBtnGreen : user.coins < 50 ? .shopBtnRed : .shopBtn)
-                        .resizable()
-                        .foregroundColor(.black)
-                        .scaledToFit()
-                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 80 : 50)
+                    TextBg(height: DeviceInfo.shared.deviceType == .pad ? 75:50, text: "BUY", textSize: DeviceInfo.shared.deviceType == .pad ? 40:20)
                 }
                 
             }

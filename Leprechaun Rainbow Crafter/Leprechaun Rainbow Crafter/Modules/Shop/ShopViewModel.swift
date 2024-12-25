@@ -1,10 +1,18 @@
+//
+//  ShopViewModel.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 25.12.2024.
+//
+
+
 import SwiftUI
 
 class ShopViewModel: ObservableObject {
     @Published var bonuses: [Bonus] = [
-        Bonus(icon: "magnet", name: "Magnet"),
-        Bonus(icon: "acceleration", name: "Acceleration"),
-        Bonus(icon: "shield", name: "shield")
+        Bonus(icon: "bonusIcon1", price: 300, bonus: 20),
+        Bonus(icon: "bonusIcon2", price: 450, bonus: 30),
+        Bonus(icon: "bonusIcon3", price: 575, bonus: 40)
     ] {
         didSet {
             saveBonus()
@@ -16,12 +24,6 @@ class ShopViewModel: ObservableObject {
         loadBonus()
     }
     private let userDefaultsBonusKey = "bonuses"
-    
-    func useBonus(name: String) {
-        if let index = bonuses.firstIndex(where: { $0.name.lowercased() == name.lowercased() }) {
-            bonuses[index].purchased = false
-        }
-    }
     
     func saveBonus() {
         if let encodedData = try? JSONEncoder().encode(bonuses) {
@@ -39,11 +41,6 @@ class ShopViewModel: ObservableObject {
         }
     }
     
-    func purchaseBonus(bonus: Bonus) {
-        if let index = bonuses.firstIndex(where: { $0.id == bonus.id}) {
-            bonuses[index].purchased = true
-        }
-    }
     
     
 }
