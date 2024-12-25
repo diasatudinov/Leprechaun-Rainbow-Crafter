@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "logoLRC.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
