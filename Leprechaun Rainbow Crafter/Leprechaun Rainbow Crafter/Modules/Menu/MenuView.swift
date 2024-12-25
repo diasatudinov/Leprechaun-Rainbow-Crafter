@@ -18,7 +18,7 @@ struct MenuView: View {
     
     @StateObject var user = User.shared
       @StateObject var settingsVM = SettingsModel()
-//    @StateObject var shopVM = ShopViewModel()
+    @StateObject var shopVM = ShopViewModel()
     
     var body: some View {
         GeometryReader { geometry in
@@ -191,10 +191,10 @@ struct MenuView: View {
                // GameView(teamVM: teamVM)
             }
             .fullScreenCover(isPresented: $showShop) {
-                //ShopView(viewModel: shopVM)
+                ShopView(viewModel: shopVM)
             }
             .fullScreenCover(isPresented: $showRules) {
-                //RulesView()
+                RulesView()
             }
             .fullScreenCover(isPresented: $showSettings) {
                 SettingsView(settings: settingsVM)
