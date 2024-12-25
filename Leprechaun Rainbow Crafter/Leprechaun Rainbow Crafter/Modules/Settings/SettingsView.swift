@@ -1,3 +1,11 @@
+//
+//  SettingsView.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 25.12.2024.
+//
+
+
 import SwiftUI
 import StoreKit
 
@@ -14,7 +22,7 @@ struct SettingsView: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         ZStack {
-                            Image(.backBtn)
+                            Image(.menuBtn)
                                 .resizable()
                                 .scaledToFit()
                         }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
@@ -22,90 +30,62 @@ struct SettingsView: View {
                     }
                     Spacer()
                     
-                    HStack(spacing: 5){
-                        Spacer()
-                        
-                        ZStack {
-                            Image(.coinsBg)
-                                .resizable()
-                                .scaledToFit()
-                            
-                            Text("\(user.coins)")
-                                .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .black))
-                                .foregroundStyle(.white)
-                                .textCase(.uppercase)
-                        }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:50)
-                        
-                    }
+                    TextWithBorder(text: "Settings", font: .custom(Fonts.regular.rawValue, size: 42), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                        .textCase(.uppercase)
+                    Spacer()
                     
-                
+                    ZStack {
+                        Image(.menuBtn)
+                            .resizable()
+                            .scaledToFit()
+                            .opacity(0)
+                    }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
             }.padding([.top,.horizontal], 20)
 
                 Spacer()
             }
             
-            VStack(spacing: 0) {
+            VStack(spacing: 25) {
                
                 ZStack {
                     
-                    Image(.settingsBg)
-                        .resizable()
-                        .scaledToFit()
-                    
-                    VStack(spacing: 5) {
-                        Text("music")
-                            .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .bold))
-                            .foregroundStyle(.white)
-                            .textCase(.uppercase)
-                        HStack {
-//                            Image(.musicIcon)
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 120:65)
+                    VStack(spacing: 45) {
+                        Spacer()
+                        HStack(spacing: 25) {
                             Button {
                                 settings.musicEnabled.toggle()
                             } label: {
                                 if settings.musicEnabled {
-                                    Image(.on)
+                                    Image(.musicOn)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 65:50)
+                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:80)
                                 } else {
-                                    Image(.off)
+                                    Image(.musicOff)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 65:50)
+                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:80)
                                 }
                             }
-                            
-                        }
-                        
-                        Text("Vibration")
-                            .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .bold))
-                            .foregroundStyle(.white)
-                            .textCase(.uppercase)
-                        HStack {
-//                            Image(.effectsIcon)
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 120:65)
                             
                             Button {
                                 settings.soundEnabled.toggle()
                             } label: {
                                 if settings.soundEnabled {
-                                    Image(.on)
+                                    Image(.effectOn)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 65:50)
+                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:80)
                                 } else {
-                                    Image(.off)
+                                    Image(.effectOff)
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 65:50)
+                                        .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:80)
                                 }
                             }
-                        }.padding(.bottom, 10)
+                            
+                        }
+                        
                        
                         Button {
                             rateUs()
@@ -114,12 +94,11 @@ struct SettingsView: View {
                                 Image(.textBg)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: DeviceInfo.shared.deviceType == .pad ? 65:50)
+                                    .frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
                                 
-                                Text("Rate us")
-                                    .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .bold))
-                                    .foregroundStyle(.white)
+                                TextWithBorder(text: "Rate us", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 60:35), textColor: .appWhite, borderColor: .appGreen, borderWidth: 1)
                                     .textCase(.uppercase)
+                                
                             }
                         }
                         
@@ -128,7 +107,7 @@ struct SettingsView: View {
                 }.scaledToFit().frame(height: DeviceInfo.shared.deviceType == .pad ? 500:312)
             }
         }.background(
-            Image(.bg)
+            Image(.appBg)
                 .resizable()
                 .edgesIgnoringSafeArea(.all)
                 .scaledToFill()
