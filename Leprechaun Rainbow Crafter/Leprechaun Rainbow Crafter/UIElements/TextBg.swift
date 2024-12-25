@@ -1,3 +1,11 @@
+//
+//  TextBg.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 25.12.2024.
+//
+
+
 import SwiftUI
 
 struct TextBg: View {
@@ -10,10 +18,10 @@ struct TextBg: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: height)
-            Text(text)
-                .font(.system(size: textSize, weight: .bold))
-                .foregroundStyle(.white)
+            
+            TextWithBorder(text: text, font: .custom(Fonts.regular.rawValue, size: textSize), textColor: .appWhite, borderColor: .appGreen, borderWidth: 1)
                 .textCase(.uppercase)
+                
         }
     }
 }
