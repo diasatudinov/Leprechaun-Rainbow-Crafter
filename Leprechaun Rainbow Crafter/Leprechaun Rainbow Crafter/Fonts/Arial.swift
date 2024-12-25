@@ -1,4 +1,12 @@
-enum Arial: String {
-    case regular = "ArialMT.ttf"
-    case bold = "Arial-BoldMT.TTF"
+//
+//  Arial.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 25.12.2024.
+//
+
+import Foundation
+
+enum Fonts: String {
+    case regular = "ChauPhilomeneOne-Regular"
 }
