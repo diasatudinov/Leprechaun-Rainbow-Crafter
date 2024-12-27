@@ -11,4 +11,5 @@ struct Bonus : Identifiable, Equatable, Codable, Hashable {
     let icon: String
     let price: Int
     let bonus: Int
+    var purchased = false
 }

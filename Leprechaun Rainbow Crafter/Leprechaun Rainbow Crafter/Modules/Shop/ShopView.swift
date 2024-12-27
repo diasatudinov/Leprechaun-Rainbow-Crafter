@@ -41,7 +41,8 @@ struct ShopView: View {
                                 .font(.system(size: DeviceInfo.shared.deviceType == .pad ? 40:20, weight: .black))
                                 .foregroundStyle(.white)
                                 .textCase(.uppercase)
-                        }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:50)
+                                .padding(.leading, 35)
+                        }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:60)
                         
                     }
                     
@@ -106,11 +107,10 @@ struct ShopView: View {
                     
                 }
                 Button {
-                    
-                    if user.coins > 50 {
-                        user.minusUserCoins(for: 50)
+                    if user.coins > bonus.price {
+                        viewModel.purchaseBonus(bonus: bonus)
+                        user.minusUserCoins(for: bonus.price)
                     }
-                    
                 } label: {
                     TextBg(height: DeviceInfo.shared.deviceType == .pad ? 75:50, text: "BUY", textSize: DeviceInfo.shared.deviceType == .pad ? 40:20)
                 }

@@ -19,6 +19,10 @@ class ShopViewModel: ObservableObject {
         }
     }
     
+    var largestPurchasedBonus: Bonus? {
+        bonuses.filter { $0.purchased }.max(by: { $0.bonus < $1.bonus })
+    }
+    
     init() {
         
         loadBonus()
@@ -41,6 +45,12 @@ class ShopViewModel: ObservableObject {
         }
     }
     
+    func purchaseBonus(bonus: Bonus) {
+        if let index = bonuses.firstIndex(where: { $0.id == bonus.id}) {
+            bonuses[index].purchased = true
+            
+        }
+    }
     
     
 }
