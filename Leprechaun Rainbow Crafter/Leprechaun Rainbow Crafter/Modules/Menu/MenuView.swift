@@ -17,9 +17,9 @@ struct MenuView: View {
     
     
     @StateObject var user = User.shared
-      @StateObject var settingsVM = SettingsModel()
+    @StateObject var settingsVM = SettingsModel()
     @StateObject var shopVM = ShopViewModel()
-    
+    @StateObject var collectionVM = CollectionViewModel()
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
@@ -185,7 +185,7 @@ struct MenuView: View {
 //                }
 //            }
             .fullScreenCover(isPresented: $showCollections) {
-               // TeamView(viewModel: teamVM)
+                CollectionView(viewModel: collectionVM)
             }
             .fullScreenCover(isPresented: $showGame) {
                // GameView(teamVM: teamVM)
