@@ -78,8 +78,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     private func startLevel(_ level: Int) {
-        print("Starting Level \(level)")
-
         // Increase the speed of falling stars
         fallDuration = max(1.0, fallDuration - 0.5) // Reduce duration with a minimum cap
 
@@ -205,7 +203,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
        
         
         
-        print("chestCount = \(chestCount)")
         if settingsVM.soundEnabled {
             playSound(named: "collect.mp3")
         }
