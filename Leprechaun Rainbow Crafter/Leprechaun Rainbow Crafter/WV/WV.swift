@@ -1,3 +1,11 @@
+//
+//  WV.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 27.12.2024.
+//
+
+
 
 import SwiftUI
 import WebKit

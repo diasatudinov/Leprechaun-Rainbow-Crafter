@@ -38,7 +38,7 @@ struct MenuView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:86)
-                                    TextWithBorder(text: "\(user.coins * 100)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 80 :30), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                                    TextWithBorder(text: "\(user.coins)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 80 :30), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
                                         .textCase(.uppercase)
                                         .padding(.leading, 48)
                                 }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
@@ -98,7 +98,7 @@ struct MenuView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(height: DeviceInfo.shared.deviceType == .pad ? 160:86)
-                                    TextWithBorder(text: "\(user.coins * 100)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 80 :30), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                                    TextWithBorder(text: "\(user.coins)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 80 :30), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
                                         .textCase(.uppercase)
                                         .padding(.leading, 48)
                                 }.frame(height: DeviceInfo.shared.deviceType == .pad ? 100:55)
@@ -172,23 +172,23 @@ struct MenuView: View {
                     .scaledToFill()
                 
             )
-//            .onAppear {
-//                if settingsVM.musicEnabled {
-//                    MusicPlayer.shared.playBackgroundMusic()
-//                }
-//            }
-//            .onChange(of: settingsVM.musicEnabled) { enabled in
-//                if enabled {
-//                    MusicPlayer.shared.playBackgroundMusic()
-//                } else {
-//                    MusicPlayer.shared.stopBackgroundMusic()
-//                }
-//            }
+            .onAppear {
+                if settingsVM.musicEnabled {
+                    MusicPlayer.shared.playBackgroundMusic()
+                }
+            }
+            .onChange(of: settingsVM.musicEnabled) { enabled in
+                if enabled {
+                    MusicPlayer.shared.playBackgroundMusic()
+                } else {
+                    MusicPlayer.shared.stopBackgroundMusic()
+                }
+            }
             .fullScreenCover(isPresented: $showCollections) {
                 CollectionView(viewModel: collectionVM)
             }
             .fullScreenCover(isPresented: $showGame) {
-               // GameView(teamVM: teamVM)
+                GameView(collectionVM: collectionVM, shopVM: shopVM)
             }
             .fullScreenCover(isPresented: $showShop) {
                 ShopView(viewModel: shopVM)

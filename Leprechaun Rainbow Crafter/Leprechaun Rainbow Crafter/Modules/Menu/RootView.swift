@@ -1,3 +1,11 @@
+//
+//  RootView.swift
+//  Leprechaun Rainbow Crafter
+//
+//  Created by Dias Atudinov on 27.12.2024.
+//
+
+
 import SwiftUI
 
 struct RootView: View {
@@ -6,6 +14,8 @@ struct RootView: View {
     @State var toUp: Bool = true
     @AppStorage("vers") var verse: Int = 0
     
+    @State private var progress: CGFloat = 0.0
+    @State private var timer: Timer?
     var body: some View {
         ZStack {
             if verse == 1 {
@@ -14,6 +24,9 @@ struct RootView: View {
                 VStack {
                     if isLoading {
                         SplashScreen()
+                            .onAppear {
+                                startTimer()
+                            }
                     } else {
                         MenuView()
                             .onAppear {
@@ -30,7 +43,6 @@ struct RootView: View {
         }
         .onAppear {
             updateIfNeeded()
-            print("\(Links.shared.finalURL)")
            
         }
     }
@@ -41,12 +53,10 @@ struct RootView: View {
                 if await !Resolver.checking() {
                     verse = 1
                     toUp = false
-                    isLoading = false
                     
                 } else {
                     verse = 0
                     toUp = true
-                    isLoading = false
                 }
             }
         } else {
@@ -61,6 +71,18 @@ struct RootView: View {
             let selector = NSSelectorFromString("setInterfaceOrientation:")
             if let responder = windowScene.value(forKey: "keyWindow") as? UIResponder, responder.responds(to: selector) {
                 responder.perform(selector, with: orientation.rawValue)
+            }
+        }
+    }
+    
+    func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.07, repeats: true) { timer in
+            if progress < 1 {
+                progress += 0.01
+            } else {
+                isLoading = false
+                timer.invalidate()
             }
         }
     }
