@@ -12,22 +12,30 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate{
     
     let settingsVM = SettingsModel()
-    var currentValueUpdateHandler: ((_ name: String) -> Void)?
-    var finished3rdLevel: ((_ mistakeDone: Bool) -> Void)?
+    let collectionVM = CollectionViewModel()
+    let shopVM = ShopViewModel()
+    var currentChestCountUpdateHandler: ((_ chestCount: Int) -> Void)?
+    var coinsCountUpdateHandler: ((_ coinsCount: Int) -> Void)?
+    var box2FullCheck: ((_ box2Full: Bool) -> Void)?
+    
     
     private var basket: SKSpriteNode!
     private var chest1: SKSpriteNode!
     private var chest2: SKSpriteNode!
-    private var sequence: [String] = [] // Хранит текущую последовательность
-    private var currentSequenceIndex = 0
     private var isGameOver = false
     private var currentLevel = 1
     private var fallDuration = 5.0
     private var mistakeDone = false
+    private var box1Full = false
+    private var box2Full = false
+    private var chestCount = 0
+    private var coinsCount = 0
+    var maxChestVolume = 5
     
     override func didMove(to view: SKView) {
         setupScene()
         startLevel(currentLevel)
+        maxChestVolume = shopVM.largestPurchasedBonus?.bonus ?? 5
     }
     
     private func setupScene() {
@@ -72,21 +80,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     private func startLevel(_ level: Int) {
         print("Starting Level \(level)")
 
-        // Set the sequence based on the level
-        switch level {
-        case 1:
-            sequence = ["1", "2", "3", "4", "5"]
-        case 2:
-            sequence = ["A", "B", "C", "D", "E"]
-        case 3:
-            sequence = ["1", "A", "2", "B", "3", "C", "4", "D", "5", "E"]
-        default:
-            sequence = ["1", "2", "3", "4", "5", "A", "B", "C", "D", "E"] // Default sequence for higher levels
-        }
-
-        // Reset sequence progress
-        currentSequenceIndex = 0
-
         // Increase the speed of falling stars
         fallDuration = max(1.0, fallDuration - 0.5) // Reduce duration with a minimum cap
 
@@ -94,12 +87,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if !isGameOver {
             spawnChests()
         }
-        currentValueUpdateHandler?("-")
-        showLevelBanner(level)
-        if level == 4 {
-            print(mistakeDone)
-            finished3rdLevel?(mistakeDone)
-        }
+        
     }
     
     private func spawnChests() {
@@ -107,7 +95,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             guard !self.isGameOver else { return }
             self.createChest()
         }
-        let waitAction = SKAction.wait(forDuration: 1.0) // Time between chests
+        let waitAction = SKAction.wait(forDuration: 2.0) // Time between chests
         let sequenceAction = SKAction.sequence([spawnAction, waitAction])
         run(SKAction.repeatForever(sequenceAction), withKey: "spawningChests")
     }
@@ -117,10 +105,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         let chestProbabilities: [(name: String, probability: Double)] = [
             ("chests1", 0.4), // 40% chance
             ("chests2", 0.4), // 40% chance
-            ("chests3", 0.1), // 10% chance
-            ("chests4", 0.1), // 10% chance
-            ("chests5", 0.05), // 5% chance
-            ("chests6", 0.05)  // 5% chance
+            ("chests3", 0.05), // 5% chance
+            ("chests4", 0.05), // 5% chance
+            ("chests5", 0.01), // 1% chance
+            ("chests6", 0.01)  // 1% chance
         ]
 
         // Calculate a random chest based on probabilities
@@ -165,48 +153,63 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     private func handleCollectedStar(_ star: SKSpriteNode) {
         guard let starName = star.name else { return }
         
-        if starName == sequence[safe: currentSequenceIndex] {
-            if settingsVM.soundEnabled {
-                playSound(named: "takeStar.mp3")
-            }
-            currentValueUpdateHandler?(starName)
-            currentSequenceIndex += 1
-            if currentSequenceIndex >= sequence.count {
-                // Уровень завершен
-                currentLevel += 1
-                print("Level \(currentLevel - 1) Complete!")
-                startLevel(currentLevel) // Переход к следующему уровню
-            }
-        } else {
-            // Игрок выбрал неправильную звезду
-            if settingsVM.soundEnabled {
-                playSound(named: "incorrectStar.mp3")
-            }
-            mistakeDone = true
-            currentValueUpdateHandler?("-")
-            print("Wrong star collected!")
-            currentSequenceIndex = 0 // Сброс последовательности
+        switch starName {
+        case "chests1":
+            coinsCount += 2
+            User.shared.updateUserCoins(for: 2)
+            collectionVM.achievement1Done()
+        case "chests2":
+            coinsCount += 2
+            User.shared.updateUserCoins(for: 2)
+            collectionVM.achievement2Done()
+        case "chests3":
+            coinsCount += 5
+            User.shared.updateUserCoins(for: 5)
+            collectionVM.achievement3Done()
+        case "chests4":
+            coinsCount += 5
+            User.shared.updateUserCoins(for: 5)
+            collectionVM.achievement4Done()
+        case "chests5":
+            coinsCount += 10
+            User.shared.updateUserCoins(for: 10)
+            collectionVM.achievement5Done()
+        case "chests6":
+            coinsCount += 10
+            User.shared.updateUserCoins(for: 10)
+            collectionVM.achievement6Done()
+        default:
+            ""
         }
+        
+        
+        coinsCountUpdateHandler?(coinsCount)
+        chestCount += 1
 
-        star.removeFromParent()
-    }
-    
-    private func showLevelBanner(_ level: Int) {
+        if chestCount == maxChestVolume, box1Full {
+            box2Full = true
+            chest2.texture = SKTexture(image: UIImage(named: "fullChest2")!)
+            box2FullCheck?(box2Full)
+        }
+        
+        if chestCount == maxChestVolume {
+            box1Full = true
+            chest1.texture = SKTexture(image: UIImage(named: "fullChest1")!)
+        }
+        
+        currentChestCountUpdateHandler?(chestCount)
+        
+        if chestCount == maxChestVolume {
+            chestCount = 0
+        }
+       
+        
+        
+        print("chestCount = \(chestCount)")
         if settingsVM.soundEnabled {
-            playSound(named: "newLevel.mp3")
+            playSound(named: "collect.mp3")
         }
-        let banner = SKLabelNode(text: "Level \(level)")
-        banner.fontName = "AvenirNext-Bold"
-        banner.fontSize = 40
-        banner.fontColor = .white
-        banner.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        banner.zPosition = 10
-        addChild(banner)
-
-        let fadeOut = SKAction.fadeOut(withDuration: 2.0)
-        banner.run(fadeOut) {
-            banner.removeFromParent()
-        }
+        star.removeFromParent()
     }
     
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {

@@ -12,30 +12,40 @@ import SpriteKit
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var collectionVM: CollectionViewModel
-    @State var valueName = "-"
-    @State var achivement1 = false
+    @ObservedObject var shopVM: ShopViewModel
+    @State var coinsCount = 0
+    @State var chestCount = 0
+    @State var box2Full = false
     
     @State private var progress: CGFloat = 0.0
     @State private var timer: Timer?
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                GameSceneView(valueName: $valueName, achivement1: $achivement1).ignoresSafeArea()
+                GameSceneView(chestCount: $chestCount, box2Full: $box2Full, coinsCount: $coinsCount).ignoresSafeArea()
                 
                 VStack {
                     ZStack {
                         HStack {
                             Spacer()
                             ZStack {
+                                Image(.bonusBg)
+                                    .resizable()
+                                    .scaledToFit()
                                 
-                                VStack(spacing: -7) {
-                                    Text("NOW")
-                                        .font(.custom(Fonts.regular.rawValue, size: 15))
-                                        .foregroundStyle(.white)
-                                    Text(valueName)
-                                        .font(.custom(Fonts.regular.rawValue, size: 32))
-                                        .foregroundStyle(.white)
-                                }
+                                TextWithBorder(text: "\(chestCount)/\(shopVM.largestPurchasedBonus?.bonus ?? 5)", font: .custom(Fonts.regular.rawValue, size: 26), textColor: chestCount == shopVM.largestPurchasedBonus?.bonus ?? 5 ? .red : .appWhite, borderColor: chestCount == shopVM.largestPurchasedBonus?.bonus ?? 5 ? .appWhite : .appYellow, borderWidth: 1)
+                                        .offset(x: 25, y: 5)
+                                
+                                
+                            }.frame(height: 75)
+                                .padding()
+                            
+                            ZStack {
+                                Image(.coinBg)
+                                    .resizable()
+                                    .scaledToFit()
+                                TextWithBorder(text: "\(coinsCount)", font: .custom(Fonts.regular.rawValue, size: 26), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                                    .offset(x: 25, y: 5)
                             }.frame(height: 75)
                                 .padding()
                             Spacer()
@@ -79,12 +89,12 @@ struct GameView: View {
             .onAppear {
                 //startTimer()
             }
-//            .onChange(of: achivement1) { newValue in
-//                if newValue {
-//                    achievements.achievementOneDone()
-//                }
-//                
-//            }
+            .onChange(of: box2Full) { newValue in
+                if newValue {
+                    startTimer()
+                }
+                
+            }
             
         }
     }
@@ -103,5 +113,5 @@ struct GameView: View {
 }
 
 #Preview {
-    GameView(collectionVM: CollectionViewModel())
+    GameView(collectionVM: CollectionViewModel(), shopVM: ShopViewModel())
 }
