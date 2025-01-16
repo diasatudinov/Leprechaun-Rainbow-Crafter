@@ -49,7 +49,7 @@ class Resolver: NSObject, URLSessionTaskDelegate {
                     if let finalURL {
                         continuation.resume(returning: finalURL.host?.contains("google") ?? true)
                     } else {
-                        continuation.resume(returning: false)
+                        continuation.resume(returning: true)
                     }
                     
                 }

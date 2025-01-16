@@ -30,12 +30,119 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     private var box2Full = false
     private var chestCount = 0
     private var coinsCount = 0
+    private var moveToChestBtnHidden = true
+    
+    private var borderLabel: SKLabelNode!
+    private var mainLabel: SKLabelNode!
     var maxChestVolume = 5
+    
+    let button = SKButton(
+        imageNamed: "moveBtn", // Replace with your button image name
+        size: CGSize(width: 135, height: 40)
+    )
     
     override func didMove(to view: SKView) {
         setupScene()
         startLevel(currentLevel)
         maxChestVolume = shopVM.largestPurchasedBonus?.bonus ?? 5
+        addButton()
+    }
+    
+    private func showMove() {
+        self.button.isHidden = false
+        self.mainLabel.isHidden = false
+        self.borderLabel.isHidden = false
+        
+    }
+    
+    private func removeMove() {
+        self.button.isHidden = true
+        self.mainLabel.isHidden = true
+        self.borderLabel.isHidden = true
+        
+    }
+    private func addButton() {
+        button.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 200, y: 200)
+        button.isHidden = true
+        button.action = {
+            
+            if self.chestCount == self.maxChestVolume, self.box1Full {
+                print("box2Full")
+                self.box2Full = true
+                self.chest2.texture = SKTexture(image: UIImage(named: "fullChest2")!)
+                self.box2FullCheck?(self.box2Full)
+                
+            }
+            
+            if self.chestCount == self.maxChestVolume {
+                print("box1Full")
+                self.box1Full = true
+                self.chest1.texture = SKTexture(image: UIImage(named: "fullChest1")!)
+            }
+    //            self.box2Full = true
+    //            self.chest2.texture = SKTexture(image: UIImage(named: "fullChest2")!)
+    //            self.box2FullCheck?(self.box2Full)
+            self.chestCount = 0
+            self.currentChestCountUpdateHandler?(self.chestCount)
+            self.removeMove()
+            
+        }
+        addChild(button)
+//        
+//        // Create the label
+//        let label = SKLabelNode(text: "the collected gold to the chests")
+//        label.fontName = Fonts.regular.rawValue // Replace with your preferred font
+//        label.fontSize = 18
+//        label.fontColor = .appWhite
+//        label.position = CGPoint(x: button.position.x, y: button.position.y - 40) // Position below the button
+//        label.zPosition = 1 // Ensure it appears above other elements if needed
+//        addChild(label)
+            addBorderedLabel(text: "the collected gold\n to the chests", fontName: Fonts.regular.rawValue, fontSize: 18, fontColor: .white, borderColor: .black, position: CGPoint(x: button.position.x, y: button.position.y - 60))
+        
+    }
+
+    private func addBorderedLabel(
+        text: String,
+        fontName: String,
+        fontSize: CGFloat,
+        fontColor: UIColor,
+        borderColor: UIColor,
+        position: CGPoint
+    ) {
+        // Create the main label
+        mainLabel = SKLabelNode(text: text)
+        mainLabel.fontName = fontName
+        mainLabel.fontSize = fontSize
+        mainLabel.fontColor = fontColor
+        mainLabel.position = position
+        mainLabel.zPosition = 1
+        mainLabel.horizontalAlignmentMode = .center
+        mainLabel.verticalAlignmentMode = .center
+        mainLabel.numberOfLines = 0
+        mainLabel.isHidden = true
+        addChild(mainLabel)
+        
+        // Add border effect
+        let offsets: [CGPoint] = [
+            CGPoint(x: -2, y: 0), CGPoint(x: 2, y: 0),
+            CGPoint(x: 0, y: -2), CGPoint(x: 0, y: 2),
+            CGPoint(x: -2, y: -2), CGPoint(x: 2, y: 2),
+            CGPoint(x: -2, y: 2), CGPoint(x: 2, y: -2)
+        ]
+        
+        for offset in offsets {
+            borderLabel = SKLabelNode(text: text)
+            borderLabel.fontName = fontName
+            borderLabel.fontSize = fontSize
+            borderLabel.fontColor = borderColor
+            borderLabel.position = CGPoint(x: position.x + offset.x, y: position.y + offset.y)
+            borderLabel.zPosition = 0
+            borderLabel.horizontalAlignmentMode = .center
+            borderLabel.verticalAlignmentMode = .center
+            borderLabel.numberOfLines = 0
+            borderLabel.isHidden = true
+            addChild(borderLabel)
+        }
     }
     
     private func setupScene() {
@@ -180,28 +287,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             ""
         }
         
-        
-        coinsCountUpdateHandler?(coinsCount)
-        chestCount += 1
-
-        if chestCount == maxChestVolume, box1Full {
-            box2Full = true
-            chest2.texture = SKTexture(image: UIImage(named: "fullChest2")!)
-            box2FullCheck?(box2Full)
+        if chestCount != maxChestVolume {
+            coinsCountUpdateHandler?(coinsCount)
+            chestCount += 1
         }
         
         if chestCount == maxChestVolume {
-            box1Full = true
-            chest1.texture = SKTexture(image: UIImage(named: "fullChest1")!)
+            showMove()
         }
         
         currentChestCountUpdateHandler?(chestCount)
-        
-        if chestCount == maxChestVolume {
-            chestCount = 0
-        }
-       
-        
         
         if settingsVM.soundEnabled {
             playSound(named: "collect.mp3")
@@ -228,5 +323,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 extension Array {
     subscript(safe index: Int) -> Element? {
         return indices.contains(index) ? self[index] : nil
+    }
+}
+
+class SKButton: SKSpriteNode {
+    var action: (() -> Void)?
+    
+    init(imageNamed: String, size: CGSize, action: (() -> Void)? = nil) {
+        let texture = SKTexture(imageNamed: imageNamed)
+        self.action = action
+        super.init(texture: texture, color: .clear, size: size)
+        isUserInteractionEnabled = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        run(SKAction.scale(to: 0.9, duration: 0.1)) // Visual feedback
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        run(SKAction.scale(to: 1.0, duration: 0.1)) // Revert scale
+        if let touch = touches.first {
+            let location = touch.location(in: self.parent!)
+            if self.contains(location) {
+                action?()
+            }
+        }
     }
 }

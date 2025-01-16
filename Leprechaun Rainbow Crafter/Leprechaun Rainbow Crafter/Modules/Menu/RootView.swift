@@ -43,7 +43,6 @@ struct RootView: View {
         }
         .onAppear {
             updateIfNeeded()
-           
         }
     }
     

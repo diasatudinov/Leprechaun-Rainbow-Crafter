@@ -91,7 +91,7 @@ struct ShopView: View {
                         Image(.bonusBg)
                             .resizable()
                             .scaledToFit()
-                        TextWithBorder(text: "\(price)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 32:16), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
+                        TextWithBorder(text: "\(bonusCount)", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 32:16), textColor: .appWhite, borderColor: .appYellow, borderWidth: 1)
                             .textCase(.uppercase)
                             .padding(.leading, 25)
                     }.frame(height: DeviceInfo.shared.deviceType == .pad ? 70:40)

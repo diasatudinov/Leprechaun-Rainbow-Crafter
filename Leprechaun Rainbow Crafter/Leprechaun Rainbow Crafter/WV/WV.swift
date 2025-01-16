@@ -85,12 +85,12 @@ struct WVWrap: View {
                 if let url = Links.shared.finalURL {
                     WV(initialURL: url)
                         .onAppear {
-                           
+                            
                         }
                 } else {
                     Text("Error")
                         .onAppear {
-                           
+                            
                             firstOpen = true
                         }
                 }
