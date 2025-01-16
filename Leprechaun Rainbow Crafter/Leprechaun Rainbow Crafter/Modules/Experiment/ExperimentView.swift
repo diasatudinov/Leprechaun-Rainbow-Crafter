@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+//Открывается рецепт и по нему надо собрать зелье
+// рецепт можно открыть сверху в углу где то
 
 struct ExperimentView: View {
     var body: some View {
