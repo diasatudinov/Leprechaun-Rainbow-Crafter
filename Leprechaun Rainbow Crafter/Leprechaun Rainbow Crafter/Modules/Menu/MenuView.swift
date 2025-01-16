@@ -19,6 +19,7 @@ struct MenuView: View {
     @StateObject var user = User.shared
     @StateObject var settingsVM = SettingsModel()
     @StateObject var shopVM = ShopViewModel()
+    @StateObject var gameVM = GameViewModel()
     @StateObject var collectionVM = CollectionViewModel()
     var body: some View {
         GeometryReader { geometry in
@@ -166,7 +167,7 @@ struct MenuView: View {
                 }
             }
             .background(
-                Image(.appBg)
+                Image(.menuBg)
                     .resizable()
                     .edgesIgnoringSafeArea(.all)
                     .scaledToFill()
@@ -188,7 +189,7 @@ struct MenuView: View {
                 CollectionView(viewModel: collectionVM)
             }
             .fullScreenCover(isPresented: $showGame) {
-                GameView(collectionVM: collectionVM, shopVM: shopVM)
+                LevelView(viewModel: gameVM)
             }
             .fullScreenCover(isPresented: $showShop) {
                 ShopView(viewModel: shopVM)
