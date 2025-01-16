@@ -43,8 +43,7 @@ struct RulesView: View {
             }
             VStack {
                 
-                TextWithBorder(text: "You play as a leprechaun collecting treasures falling from the sky. You need to place the treasures on the sides of the screen to build a rainbow. Each treasure you collect adds to your rainbow, and once all the spots are filled, the rainbow will be completed. Try to collect as many treasures as possible to create the brightest rainbow!", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 45:25), textColor: .appWhite, borderColor: .appGreen, borderWidth: 1)
-                    .textCase(.uppercase)
+                TextWithBorder(text: "The player becomes the assistant of a leprechaun who creates magical potions. At the start of each level, a recipe is given that must be memorized. The player then selects the correct ingredients from a variety of options to craft the potion. Time is limited, and making a mistake will restart the level.", font: .custom(Fonts.regular.rawValue, size: DeviceInfo.shared.deviceType == .pad ? 45:25), textColor: .appWhite, borderColor: .appGreen, borderWidth: 1)
                     .padding(10)
                     .padding(.vertical, 7)
                     .multilineTextAlignment(.center)
