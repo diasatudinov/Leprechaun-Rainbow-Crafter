@@ -18,7 +18,7 @@ struct MenuView: View {
     
     @StateObject var user = User.shared
     @StateObject var settingsVM = SettingsModel()
-    @StateObject var shopVM = ShopViewModel()
+    @StateObject var experimentVM = ExperimentViewModel()
     @StateObject var gameVM = GameViewModel()
     @StateObject var collectionVM = CollectionViewModel()
     var body: some View {
@@ -63,7 +63,7 @@ struct MenuView: View {
                                 Button {
                                     showShop = true
                                 } label: {
-                                    TextBg(height: DeviceInfo.shared.deviceType == .pad ? 100 : 50, text: "Shop", textSize: DeviceInfo.shared.deviceType == .pad ? 40 : 24)
+                                    TextBg(height: DeviceInfo.shared.deviceType == .pad ? 100 : 50, text: "Experiment", textSize: DeviceInfo.shared.deviceType == .pad ? 40 : 24)
                                 }
                                 
                                 Button {
@@ -128,7 +128,7 @@ struct MenuView: View {
                                         
                                         showShop = true
                                     } label: {
-                                        TextBg(height: DeviceInfo.shared.deviceType == .pad ? 100 : 50, text: "Shop", textSize: DeviceInfo.shared.deviceType == .pad ? 40 : 24)
+                                        TextBg(height: DeviceInfo.shared.deviceType == .pad ? 100 : 50, text: "Experiment", textSize: DeviceInfo.shared.deviceType == .pad ? 40 : 24)
                                     }
                                     Spacer()
                                 }
@@ -189,10 +189,10 @@ struct MenuView: View {
                 CollectionView(viewModel: collectionVM)
             }
             .fullScreenCover(isPresented: $showGame) {
-                LevelView(viewModel: gameVM)
+                LevelView(viewModel: gameVM, collectionVM: collectionVM)
             }
             .fullScreenCover(isPresented: $showShop) {
-                ShopView(viewModel: shopVM)
+                ExperimentView(viewModel: experimentVM, collectionVM: collectionVM)
             }
             .fullScreenCover(isPresented: $showRules) {
                 RulesView()

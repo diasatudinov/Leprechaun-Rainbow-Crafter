@@ -20,6 +20,7 @@ struct StartView: View {
     @State private var showButton = true
     
     @Binding var currentLevel: Int
+    @State private var gameOver = false
     var body: some View {
         ZStack {
             VStack {
@@ -92,6 +93,7 @@ struct StartView: View {
                     Spacer()
                 }
             }
+            
             VStack {
                 
                 ZStack {
@@ -151,7 +153,10 @@ struct StartView: View {
                     Button {
                         if viewModel.compareIngredients(selectedIngredients, hidenPoison) {
                             viewModel.winLevel(currentLevel: currentLevel)
+                            
                         }
+                        
+                        gameOver = true
                         print(viewModel.compareIngredients(selectedIngredients, hidenPoison))
                     } label: {
                         TextBg(height: DeviceInfo.shared.deviceType == .pad ? 80 :40, text: "Mix", textSize: DeviceInfo.shared.deviceType == .pad ? 40:20)
@@ -165,6 +170,29 @@ struct StartView: View {
                 }
                     
             }
+            
+            if gameOver {
+                Rectangle()
+                    .foregroundStyle(Color.black)
+                    .ignoresSafeArea()
+                    .opacity(0.7)
+                
+                VStack {
+                    
+                    TextWithBorder(text: viewModel.compareIngredients(selectedIngredients, hidenPoison) ? "level completed":"Game over!", font: .custom(Fonts.regular.rawValue, size: 40), textColor: .appWhite, borderColor: .appGreen, borderWidth: 1)
+                        .textCase(.uppercase)
+                    
+                    
+                   
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        TextBg(height: DeviceInfo.shared.deviceType == .pad ? 80 :40, text: "Return", textSize: DeviceInfo.shared.deviceType == .pad ? 40:20)
+                    }
+                }
+            }
+            
+            
         }.background(
             Image(.appBg)
                 .resizable()

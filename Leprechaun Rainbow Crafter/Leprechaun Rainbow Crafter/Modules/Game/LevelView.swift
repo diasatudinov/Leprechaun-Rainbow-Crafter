@@ -10,6 +10,7 @@ import SwiftUI
 struct LevelView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: GameViewModel
+    @ObservedObject var collectionVM: CollectionViewModel
     @State private var tappedLevel = 0
     @State private var showGame = false
     var body: some View {
@@ -50,6 +51,14 @@ struct LevelView: View {
                         if viewModel.openedLevels.contains(levelNum) {
                             tappedLevel = levelNum
                             showGame = true
+                        }
+                        
+                        if viewModel.openedLevels.contains(5) {
+                            collectionVM.achievement3Done()
+                        }
+                        
+                        if viewModel.openedLevels.contains(10) {
+                            collectionVM.achievement4Done()
                         }
                     } label: {
                         ZStack {
@@ -100,5 +109,5 @@ struct LevelView: View {
 }
 
 #Preview {
-    LevelView(viewModel: GameViewModel())
+    LevelView(viewModel: GameViewModel(), collectionVM: CollectionViewModel())
 }
