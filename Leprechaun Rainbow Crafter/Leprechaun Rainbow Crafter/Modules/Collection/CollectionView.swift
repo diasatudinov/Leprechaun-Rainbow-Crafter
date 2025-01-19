@@ -47,47 +47,34 @@ struct CollectionView: View {
                     
                     VStack {
                         HStack {
-                            Image(.chests1)
+                            Image(.ach1)
                                 .renderingMode(viewModel.achievement1 ? .original : .template)
                                 .resizable()
                                 .foregroundColor(.black)
                                 .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
+                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 240 : 120)
                             
-                            Image(.chests2)
+                            Image(.ach2)
                                 .renderingMode(viewModel.achievement2 ? .original : .template)
                                 .resizable()
                                 .foregroundColor(.black)
                                 .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
+                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 240 : 120)
                             
-                            Image(.chests3)
+                            Image(.ach3)
                                 .renderingMode(viewModel.achievement3 ? .original : .template)
                                 .resizable()
                                 .foregroundColor(.black)
                                 .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
+                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 240 : 120)
                             
-                            Image(.chests4)
+                            Image(.ach4)
                                 .renderingMode(viewModel.achievement4 ? .original : .template)
                                 .resizable()
                                 .foregroundColor(.black)
                                 .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
+                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 240 : 120)
                             
-                            Image(.chests5)
-                                .renderingMode(viewModel.achievement5 ? .original : .template)
-                                .resizable()
-                                .foregroundColor(.black)
-                                .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
-                            
-                            Image(.chests6)
-                                .renderingMode(viewModel.achievement6 ? .original : .template)
-                                .resizable()
-                                .foregroundColor(.black)
-                                .scaledToFit()
-                                .frame(height: DeviceInfo.shared.deviceType == .pad ? 160 : 80)
                         }
                     }
                 }.frame(height: DeviceInfo.shared.deviceType == .pad ? 340:170)
